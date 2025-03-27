@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35828.75
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dino.DremIO", "Dino.DremIO\Dino.DremIO.csproj", "{25154621-A664-443A-8FC1-8CC736C19024}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dino.DremIO.Tests", "Dino.DremIO.Tests\Dino.DremIO.Tests.csproj", "{8C08E7CB-2B51-443B-82CA-408341EDE461}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{25154621-A664-443A-8FC1-8CC736C19024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25154621-A664-443A-8FC1-8CC736C19024}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25154621-A664-443A-8FC1-8CC736C19024}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25154621-A664-443A-8FC1-8CC736C19024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C08E7CB-2B51-443B-82CA-408341EDE461}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C08E7CB-2B51-443B-82CA-408341EDE461}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C08E7CB-2B51-443B-82CA-408341EDE461}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C08E7CB-2B51-443B-82CA-408341EDE461}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2FA1609C-7FED-4431-9BBF-E43CA354781B}
+	EndGlobalSection
+EndGlobal
