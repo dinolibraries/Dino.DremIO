@@ -57,9 +57,9 @@ namespace Dino.DremIO.Tests
             var provider = HostBuilderTest.Create().Provider;
             var service = provider.GetRequiredService<DremIOService>();
 
-            var context = service.CreateContext("analytic-store");
+            var context = service.CreateContext("analytic-space");
 
-            var results =await context.QueryWaitAsync("SELECT * FROM \"dremio-store\" LIMIT 100").ToListAsync();
+            var results =await context.QueryWaitAsync("SELECT tablerv.channel_id,SUM(tablerv.views) AS views FROM \"analytic-space\".\"full-network-youtube-revenue\" AS tablerv  WHERE tablerv.Status  = 'Joined' AND tablerv.UserId  = '' AND tablerv.\"date\" <= '20250325' AND tablerv.\"date\" >= '20250226'\r\nGROUP BY tablerv.channel_id\r\nORDER BY views DESC OFFSET 0 ROWS  FETCH NEXT 10 ROWS ONLY ").ToListAsync();
         }
     }
 }
