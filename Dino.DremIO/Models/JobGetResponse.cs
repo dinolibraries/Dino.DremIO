@@ -26,7 +26,7 @@ namespace Dino.DremIO.Models
 
     public enum JobState
     {
-        COMPLETED, CANCELED, FAILED, RUNNING
+        COMPLETED, CANCELED, FAILED, RUNNING, PLANNING
     }
     public class JobGetResponse
     {
