@@ -10,7 +10,7 @@ namespace Dino.DremIO.Common
         public async Task<TModel?> WaitAsync<TModel>(Func<Task<TModel?>> condition, int timeout = 300) where TModel : class
         {
             int elapsed = 0;
-            int delay = 100; // Thời gian chờ giữa các lần kiểm tra (ms)
+            int delay = 1000; // Thời gian chờ giữa các lần kiểm tra (ms)
 
             while (elapsed < timeout * 1000)
             {
