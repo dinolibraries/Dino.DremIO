@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace Dino.DremIO.Tests
 {
-    class HostBuilder
+    public class HostBuilderTest
     {
         private readonly IHost _host;
         private readonly IServiceScope _serviceScope;
-        public HostBuilder()
+        public HostBuilderTest()
         {
             _host = Host.CreateDefaultBuilder()
                 .ConfigureAppConfiguration(config =>
                 {
-                    config.AddUserSecrets<HostBuilder>();
+                    config.AddUserSecrets<HostBuilderTest>();
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
@@ -30,9 +30,9 @@ namespace Dino.DremIO.Tests
         }
         public IServiceProvider Provider { get => _serviceScope.ServiceProvider; }
 
-        public static HostBuilder Create()
+        public static HostBuilderTest Create()
         {
-            return new HostBuilder();
+            return new HostBuilderTest();
         }
     }
 }

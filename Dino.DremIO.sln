@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dino.DremIO", "Dino.DremIO\Dino.DremIO.csproj", "{25154621-A664-443A-8FC1-8CC736C19024}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dino.DremIO", "Dino.DremIO\Dino.DremIO.csproj", "{25154621-A664-443A-8FC1-8CC736C19024}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dino.DremIO.Tests", "Dino.DremIO.Tests\Dino.DremIO.Tests.csproj", "{8C08E7CB-2B51-443B-82CA-408341EDE461}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dino.DremIO.Tests", "Dino.DremIO.Tests\Dino.DremIO.Tests.csproj", "{8C08E7CB-2B51-443B-82CA-408341EDE461}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Dino.DremIO.Tests": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DremIOOption_TokenStore": "Hello"
+      }
+    }
+  }
+}

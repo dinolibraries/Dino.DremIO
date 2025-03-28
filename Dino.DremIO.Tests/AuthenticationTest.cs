@@ -10,14 +10,16 @@ namespace Dino.DremIO.Tests
         [Fact]
         public async Task GetTokenResponse()
         {
-            var provider = HostBuilder.Create().Provider;
+            //Environment.SetEnvironmentVariable("DremIOOption__TokenStore", "Testing");
+
+            var provider = HostBuilderTest.Create().Provider;
             var auth = provider.GetRequiredService<AuthDremIO>();
             var data = await auth.GetTokenInfoAsync();
         }
         [Fact]
         public async Task GetAccessTokenResponse()
         {
-            var provider = HostBuilder.Create().Provider;
+            var provider = HostBuilderTest.Create().Provider;
             var auth = provider.GetRequiredService<AuthDremIO>();
             var data = await auth.GetAccessTokenAsync();
         }
@@ -25,7 +27,7 @@ namespace Dino.DremIO.Tests
         [Fact]
         public async Task ClientTestAsync()
         {
-            var provider = HostBuilder.Create().Provider;
+            var provider = HostBuilderTest.Create().Provider;
             var client = provider.GetRequiredService<DremIOClient>();
 
             var httpBase =await client.GetHttpClientAsync();
@@ -42,7 +44,7 @@ namespace Dino.DremIO.Tests
         [Fact]
         public async Task JobAsync()
         {
-            var provider = HostBuilder.Create().Provider;
+            var provider = HostBuilderTest.Create().Provider;
             var service = provider.GetRequiredService<DremIOService>();
 
             var job = service.CreateJob();
@@ -52,7 +54,7 @@ namespace Dino.DremIO.Tests
         [Fact]
         public async Task QueryAllAsync()
         {
-            var provider = HostBuilder.Create().Provider;
+            var provider = HostBuilderTest.Create().Provider;
             var service = provider.GetRequiredService<DremIOService>();
 
             var context = service.CreateContext("analytic-store");
