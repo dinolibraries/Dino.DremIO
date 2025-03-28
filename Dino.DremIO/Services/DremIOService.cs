@@ -123,16 +123,24 @@ namespace Dino.DremIO.Services
             var result = await ResultAsync<TModel>(jobId, 500, 0, cancellationToken);
             if (result != null)
             {
-                var count = result.Rows.Count;
+                var count = 0;
                 do
                 {
+                    count += result.Rows.Count;
                     foreach (var row in result.Rows)
                     {
                         yield return row;
                     }
-                    result = await ResultAsync<TModel>(jobId, 500, count, cancellationToken);
+                    if (count < result.RowCount)
+                    {
+                        result = await ResultAsync<TModel>(jobId, 500, count, cancellationToken);
+                    }
+                    else
+                    {
+                        result = null;
+                    }
                 }
-                while (result != null && count < result.RowCount);
+                while (result != null);
             }
         }
 
