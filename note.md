@@ -1,0 +1,1 @@
+git add .; git commit -m "release v1.0.0";git push

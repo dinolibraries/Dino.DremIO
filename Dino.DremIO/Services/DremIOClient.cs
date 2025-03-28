@@ -24,7 +24,7 @@ namespace Dino.DremIO.Services
             _option = options.Value;
         }
 
-        private async Task<HttpClient> GetHttpClientAsync(CancellationToken cancellationToken = default)
+        public async Task<HttpClient> GetHttpClientAsync(CancellationToken cancellationToken = default)
         {
             var client = _httpClientFactory.CreateClient(Contants.DremIOClientKey);
             client.BaseAddress = new Uri(_option.EndpointUrl);
