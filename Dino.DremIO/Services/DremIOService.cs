@@ -142,7 +142,7 @@ namespace Dino.DremIO.Services
             var result = await waitHelper.WaitAsync(async () =>
             {
                 var res = await GetAsync(jobId, cancellationToken);
-                return res?.JobState == JobState.RUNNING ? null : res;
+                return res?.JobState != JobState.COMPLETED && res?.JobState != JobState.CANCELED && res?.JobState != JobState.FAILED ? null : res;
             }, timeout);
 
             if (result != null)
