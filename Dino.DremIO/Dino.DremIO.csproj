@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
+	<PackageProjectUrl>https://github.com/dinolibraries/Dino.DremIO</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/dinolibraries/Dino.DremIO</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
