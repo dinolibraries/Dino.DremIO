@@ -4,7 +4,7 @@
 DremIO Client Library is a C# library that helps you execute SQL queries on DremIO via API. The library provides classes that support connection management, query execution, job status tracking, and result retrieval efficiently.
 
 ## Installation
-
+![Build](https://raw.githubusercontent.com/dinolibraries/Dino.GraphqlLib/013fc61f8892fea455550de493fd58d84114f31f/assets/badge.svg)
 1. Clone the repository to your machine:
    ```sh
    git clone <repository_url>
@@ -16,6 +16,7 @@ DremIO Client Library is a C# library that helps you execute SQL queries on Drem
    ```
 
 ### NuGet Repository
+The [Dino.GraphqlLib![Nuget](https://img.shields.io/nuget/dt/Dino.DremIO)](https://www.nuget.org/packages/Dino.DremIO)  package will get you easily set up with ASP.NET.
 You can download the library from NuGet using the following command:
 ```sh
  dotnet add package Dino.DremIO --version <latest_version>
