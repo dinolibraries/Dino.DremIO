@@ -26,7 +26,11 @@ public sealed class DremioQueryTranslationPostprocessorFactory
         new DremioQueryTranslationPostprocessor(
             _dependencies,
             _relationalDependencies,
+#if NET9_0_OR_GREATER
+            (RelationalQueryCompilationContext)queryCompilationContext);
+#else
             queryCompilationContext);
+#endif
 }
 
 /// <summary>
@@ -38,7 +42,11 @@ internal sealed class DremioQueryTranslationPostprocessor : RelationalQueryTrans
     public DremioQueryTranslationPostprocessor(
         QueryTranslationPostprocessorDependencies dependencies,
         RelationalQueryTranslationPostprocessorDependencies relationalDependencies,
+#if NET9_0_OR_GREATER
+        RelationalQueryCompilationContext queryCompilationContext)
+#else
         QueryCompilationContext queryCompilationContext)
+#endif
         : base(dependencies, relationalDependencies, queryCompilationContext) { }
 
     // Override Process() here to add Dremio-specific expression tree rewrites.

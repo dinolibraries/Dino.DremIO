@@ -19,9 +19,11 @@ public sealed class DremioQuerySqlGenerator : QuerySqlGenerator
     // Dremio uses standard ANSI LIMIT / OFFSET, which is already emitted by the
     // base class, so no override is required for paging.
 
+#if NET7_0
     /// <summary>
     /// Dremio does not support the LIKE escape character clause.
     /// Strip the ESCAPE part from LIKE expressions.
+    /// (VisitLike is sealed in EF Core 8+, so this override is net7.0 only.)
     /// </summary>
     protected override Expression VisitLike(LikeExpression likeExpression)
     {
@@ -36,4 +38,5 @@ public sealed class DremioQuerySqlGenerator : QuerySqlGenerator
         }
         return base.VisitLike(likeExpression);
     }
+#endif
 }
