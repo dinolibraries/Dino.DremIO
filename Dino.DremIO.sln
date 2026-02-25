@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.13.35828.75
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11520.95 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dino.DremIO", "Dino.DremIO\Dino.DremIO.csproj", "{25154621-A664-443A-8FC1-8CC736C19024}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dino.DremIO.Tests", "Dino.DremIO.Tests\Dino.DremIO.Tests.csproj", "{8C08E7CB-2B51-443B-82CA-408341EDE461}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dino.Dremio.EntityframeworkCore.Provider", "Dino.Dremio.EntityframeworkCore.Provider\Dino.Dremio.EntityframeworkCore.Provider.csproj", "{B75368BB-3AF8-4B7C-B7C6-1AABFDF36DCC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{8C08E7CB-2B51-443B-82CA-408341EDE461}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C08E7CB-2B51-443B-82CA-408341EDE461}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C08E7CB-2B51-443B-82CA-408341EDE461}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B75368BB-3AF8-4B7C-B7C6-1AABFDF36DCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B75368BB-3AF8-4B7C-B7C6-1AABFDF36DCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B75368BB-3AF8-4B7C-B7C6-1AABFDF36DCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B75368BB-3AF8-4B7C-B7C6-1AABFDF36DCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

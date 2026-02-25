@@ -14,7 +14,7 @@ namespace Dino.DremIO.Tests
     {
         private readonly IHost _host;
         private readonly IServiceScope _serviceScope;
-        public HostBuilderTest()
+        public HostBuilderTest(Action<IServiceCollection, HostBuilderContext>? action = null)
         {
             _host = Host.CreateDefaultBuilder()
                 .ConfigureAppConfiguration(config =>
@@ -25,6 +25,7 @@ namespace Dino.DremIO.Tests
                 {
                     services.AddOptions();
                     services.AddDremIoService(hostContext.Configuration);
+                    action?.Invoke(services, hostContext);
                 }).Build();
             _serviceScope = _host.Services.CreateScope();
         }
@@ -33,6 +34,11 @@ namespace Dino.DremIO.Tests
         public static HostBuilderTest Create()
         {
             return new HostBuilderTest();
+        }
+        public static HostBuilderTest Create(Action<IServiceCollection, HostBuilderContext> config)
+        {
+            var host = new HostBuilderTest(config);
+            return host;
         }
     }
 }
