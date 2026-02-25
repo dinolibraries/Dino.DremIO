@@ -2,6 +2,7 @@ using Dino.DremIO.Models;
 using Dino.DremIO.Services;
 using System.Data;
 using System.Data.Common;
+using System.Text.RegularExpressions;
 
 namespace Dino.Dremio.EntityframeworkCore.Provider.Storage;
 
@@ -56,7 +57,7 @@ public sealed class DremioDbCommand : DbCommand
     public override async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
     {
         var sql = ApplyParameters(_commandText);
-        var ctx = _dremioService.CreateContext(_contexts);
+        var ctx = _dremioService.CreateContext(ResolveContexts(sql));
         var jobId = await ctx.QueryAsync(sql, cancellationToken);
         if (string.IsNullOrEmpty(jobId))
             throw new InvalidOperationException("DremIO returned no job ID for a non-query command.");
@@ -84,7 +85,7 @@ public sealed class DremioDbCommand : DbCommand
         CommandBehavior behavior, CancellationToken cancellationToken)
     {
         var sql = ApplyParameters(_commandText);
-        var ctx = _dremioService.CreateContext(_contexts);
+        var ctx = _dremioService.CreateContext(ResolveContexts(sql));
         var jobId = await ctx.QueryAsync(sql, cancellationToken);
         if (string.IsNullOrEmpty(jobId))
             throw new InvalidOperationException("DremIO returned no job ID.");
@@ -110,8 +111,35 @@ public sealed class DremioDbCommand : DbCommand
 
     // ── Helpers ─────────────────────────────────────────────────────────────
 
-    /// <summary>Sets the Dremio catalog contexts (e.g. space / folder path).</summary>
+    /// <summary>
+    /// Explicitly sets the Dremio catalog contexts (e.g. space / folder path).
+    /// When set, these take priority over the contexts discovered automatically
+    /// from <see cref="Attributes.TableContextAttribute"/> on the entity type.
+    /// </summary>
     public void SetContexts(params string[] contexts) => _contexts = contexts;
+
+    /// <summary>
+    /// Returns the contexts to use for a query. Explicit contexts (<see cref="SetContexts"/>)
+    /// take priority; otherwise the table name is extracted from the SQL and looked up
+    /// in the <see cref="DremioDbConnection.TableContexts"/> dictionary built from
+    /// <see cref="Attributes.TableContextAttribute"/> model annotations.
+    /// </summary>
+    private string[] ResolveContexts(string sql)
+    {
+        // Explicit always wins.
+        if (_contexts.Length > 0) return _contexts;
+
+        var lookup = _connection?.TableContexts;
+        if (lookup is null || lookup.Count == 0) return Array.Empty<string>();
+
+        // EF Core generates: FROM "table-name" AS "alias"
+        // We match the first FROM clause table name (double-quoted identifier).
+        var match = Regex.Match(sql, @"\bFROM\s+""([^""]+)""", RegexOptions.IgnoreCase);
+        if (match.Success && lookup.TryGetValue(match.Groups[1].Value, out var ctx))
+            return ctx;
+
+        return Array.Empty<string>();
+    }
 
     /// <summary>
     /// Naive parameter substitution: replaces @name placeholders with their

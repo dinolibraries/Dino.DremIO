@@ -20,9 +20,9 @@ public sealed class DremioConventionSetBuilder : RelationalConventionSetBuilder,
     {
         var conventionSet = base.CreateConventionSet();
 
-        // Remove conventions that require DDL support (DremIO is typically
-        // used as a query engine, not for DDL operations).
-        // conventionSet.ModelFinalizingConventions.Remove(...);
+        // Read [TableContext] attributes and store as model annotations so the
+        // query pipeline can route queries to the correct Dremio catalog context.
+        conventionSet.ModelFinalizingConventions.Add(new DremioTableContextConvention());
 
         return conventionSet;
     }

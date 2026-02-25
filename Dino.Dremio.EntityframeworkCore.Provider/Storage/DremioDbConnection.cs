@@ -16,10 +16,21 @@ public sealed class DremioDbConnection : DbConnection
     private readonly DremIOOption _option;
     private ConnectionState _state = ConnectionState.Closed;
 
-    public DremioDbConnection(DremIOService dremioService, DremIOOption option)
+    /// <summary>
+    /// Optional lookup: table name (case-insensitive) → Dremio catalog context paths.
+    /// Populated by <see cref="DremioRelationalConnection"/> from the EF Core model
+    /// annotations written by <see cref="../Infrastructure/DremioTableContextConvention"/>.
+    /// </summary>
+    internal IReadOnlyDictionary<string, string[]>? TableContexts { get; }
+
+    public DremioDbConnection(
+        DremIOService dremioService,
+        DremIOOption option,
+        IReadOnlyDictionary<string, string[]>? tableContexts = null)
     {
         _dremioService = dremioService;
         _option = option;
+        TableContexts = tableContexts;
     }
 
     // ── DbConnection overrides ──────────────────────────────────────────────

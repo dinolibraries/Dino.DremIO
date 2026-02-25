@@ -11,16 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace Dino.DremIO.Tests.EfCore;
 
-// ── DbContext dùng cho test ───────────────────────────────────────────────────
 
-/// <summary>
-/// DbContext tối giản để kiểm tra việc đăng ký DremioOptionsExtension.
-/// </summary>
-public class DremioTestDbContext : DbContext
-{
-    public DremioTestDbContext(DbContextOptions<DremioTestDbContext> options)
-        : base(options) { }
-}
 
 /// <summary>Kết quả trả về từ <c>SELECT 1 AS Value</c>.</summary>
 public class ScalarRow
@@ -235,5 +226,11 @@ public class DremioDbContextIntegrationTests
         {
             await conn.CloseAsync();
         }
+    }
+    [Fact]
+    public async Task DbContext_DbSet()
+    {
+        using var ctx = new DremioTestDbContext(BuildOptions());
+        var test = await ctx.RevenueCombines.ToListAsync();
     }
 }
