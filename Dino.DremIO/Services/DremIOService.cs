@@ -175,7 +175,7 @@ namespace Dino.DremIO.Services
             {
                 return result;
             }
-
+            await CancelAsync(jobId);
             throw new TimeoutException("Job wait timeout!");
         }
     }
