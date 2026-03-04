@@ -9,5 +9,6 @@ namespace Dino.DremIO.Common
         public const string SqlQuery = "/api/v3/sql";
         public const string JobResult = "/api/v3/job/{0}/results?limit={1}&offset={2}";
         public const string JobGet = "/api/v3/job/{0}";
+        public const string JobCancel = "/api/v3/job/{0}/cancel";
     }
 }

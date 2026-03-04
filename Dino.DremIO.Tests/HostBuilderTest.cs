@@ -1,4 +1,5 @@
-﻿using Dino.DremIO.Infrastructures;
+﻿using Dino.DremIO.Common;
+using Dino.DremIO.Infrastructures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +24,10 @@ namespace Dino.DremIO.Tests
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddHttpClient(Contants.DremIOClientKey).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+                    });
                     services.AddOptions();
                     services.AddDremIoService(hostContext.Configuration);
                     action?.Invoke(services, hostContext);

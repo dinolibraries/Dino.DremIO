@@ -24,7 +24,15 @@ namespace Dino.DremIO.Tests.EfCore
         public string ThumbnailUrl { get; set; }
     }
     // ── DbContext dùng cho test ───────────────────────────────────────────────────
-
+    [Keyless]
+    [TableContext("youtube-asset-space")]
+    [Table("asset-label-view")]
+    public class Assets
+    {
+        public string labels { get; set; }
+        public string EAssetKind { get; set; }
+        public string NetworkId { get; set; }
+    }
     /// <summary>
     /// DbContext tối giản để kiểm tra việc đăng ký DremioOptionsExtension.
     /// </summary>
@@ -34,5 +42,6 @@ namespace Dino.DremIO.Tests.EfCore
             : base(options) { }
 
         public  DbSet<RevenueCombine> RevenueCombines { get; set; }
+        public  DbSet<Assets> Assets { get; set; }
     }
 }

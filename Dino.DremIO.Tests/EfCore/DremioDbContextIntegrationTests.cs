@@ -233,4 +233,17 @@ public class DremioDbContextIntegrationTests
         using var ctx = new DremioTestDbContext(BuildOptions());
         var test = await ctx.RevenueCombines.ToListAsync();
     }
+    [Fact]
+    public async Task DbContext_Assets_Cancel_DbSet()
+    {
+        using var ctx = new DremioTestDbContext(BuildOptions());
+        var cancelToken = new CancellationTokenSource();
+        var task1 = ctx.Assets.ToListAsync(cancelToken.Token); ;
+        var task = new Task[] { task1,Task.Run(async ()=>
+            {
+                await Task.Delay(2000);
+                cancelToken.Cancel();
+            }) };
+        await Task.WhenAll(task);
+    }
 }

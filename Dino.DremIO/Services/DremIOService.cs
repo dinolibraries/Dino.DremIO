@@ -1,5 +1,6 @@
 ﻿using Dino.DremIO.Common;
 using Dino.DremIO.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -12,9 +13,13 @@ namespace Dino.DremIO.Services
     public class DremIOService
     {
         private readonly DremIOClient _dremIOClient;
-        public DremIOService(DremIOClient dremIOClient)
+        private readonly ILogger _logger;
+        private readonly Dino.DremIO.Common.IWaitHelper _waitHelper;
+        public DremIOService(DremIOClient dremIOClient, ILogger<DremIOService> logger, Dino.DremIO.Common.IWaitHelper waitHelper = null)
         {
             _dremIOClient = dremIOClient;
+            _logger = logger;
+            _waitHelper = waitHelper ?? new Dino.DremIO.Common.WaitHelper();
         }
 
         public DremIOClient Client => _dremIOClient;
@@ -31,7 +36,7 @@ namespace Dino.DremIO.Services
 
         public DremIOJob CreateJob()
         {
-            return new DremIOJob(this);
+            return new DremIOJob(this, _logger, _waitHelper);
         }
     }
 
@@ -97,17 +102,30 @@ namespace Dino.DremIO.Services
     public class DremIOJob
     {
         private readonly DremIOService _service;
-
-        public DremIOJob(DremIOService dremIOService)
+        private readonly ILogger _logger;
+        private readonly Dino.DremIO.Common.IWaitHelper _waitHelper;
+        public DremIOJob(DremIOService dremIOService, ILogger logger, Dino.DremIO.Common.IWaitHelper waitHelper)
         {
             _service = dremIOService;
+            _logger = logger;
+            _waitHelper = waitHelper ?? new Dino.DremIO.Common.WaitHelper();
         }
 
         public Task<JobGetResponse?> GetAsync(string jobId, CancellationToken cancellationToken = default)
         {
             return _service.Client.GetAsync<JobGetResponse>(string.Format(DremIOUrlHelper.JobGet, jobId), cancellationToken);
         }
-
+        public async Task CancelAsync(string jobId, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                await _service.Client.PostAsync<JobGetResponse>(string.Format(DremIOUrlHelper.JobCancel, jobId), cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to cancel job {jobId}");
+            }
+        }
         public Task<JobResultReponse<TModel>?> ResultAsync<TModel>(string jobId, int limit = 100, int offset = 0, CancellationToken cancellationToken = default) where TModel : class
         {
             return _service.Client.GetAsync<JobResultReponse<TModel>>(string.Format(DremIOUrlHelper.JobResult, jobId, limit, offset), cancellationToken);
@@ -146,12 +164,12 @@ namespace Dino.DremIO.Services
 
         public async Task<JobGetResponse> WaitAsync(string jobId, int timeout = 300, CancellationToken cancellationToken = default)
         {
-            var waitHelper = new WaitHelper();
-            var result = await waitHelper.WaitAsync(async () =>
+            using var res = cancellationToken.Register(() => Task.Run(async () => await CancelAsync(jobId)));
+            var result = await _waitHelper.WaitAsync(async () =>
             {
                 var res = await GetAsync(jobId, cancellationToken);
                 return res?.JobState != JobState.COMPLETED && res?.JobState != JobState.CANCELED && res?.JobState != JobState.FAILED ? null : res;
-            }, timeout);
+            }, timeout, cancellationToken).ConfigureAwait(false);
 
             if (result != null)
             {
