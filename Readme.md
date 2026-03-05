@@ -1,3 +1,44 @@
+# Dino.DremIO
+
+## Overview
+
+This repository provides a .NET client and an EF Core provider for connecting to Dremio. The solution is organized into two main areas:
+
+- `Dino.DremIO`: services, client code and helpers for interacting with the Dremio API.
+- `Dino.Dremio.EntityframeworkCore.Provider`: an EF Core provider enabling EF queries against Dremio via the project's SQL generation and storage layers.
+
+See the provider documentation for detailed usage: [Dino.Dremio.EntityframeworkCore.Provider/README.md](Dino.Dremio.EntityframeworkCore.Provider/README.md)
+
+## Key projects
+
+- `Dino.DremIO/`: main project containing services, models, options, and tests.
+- `Dino.Dremio.EntityframeworkCore.Provider/`: EF Core provider implementation (Extensions, Query, Storage, Infrastructure).
+- `Dino.DremIO.Tests/`: unit and integration tests.
+
+## Build & Test
+
+Requirements: .NET SDK 7.0 or newer.
+
+Build the entire solution:
+
+```
+dotnet build Dino.DremIO.sln -c Debug
+```
+
+Run tests:
+
+```
+dotnet test Dino.DremIO.Tests/Dino.DremIO.Tests.csproj
+```
+
+## Quickstart
+
+1. Add a project reference to `Dino.Dremio.EntityframeworkCore.Provider`.
+2. Register your `DbContext` using `UseDremio(...)` (see the provider README for examples).
+
+## Contributing
+
+Please open an issue or pull request if you need more detailed documentation, real-world configuration examples, or support for a specific Dremio setup.
 # DremIO Client Library
 
 ## Introduction
