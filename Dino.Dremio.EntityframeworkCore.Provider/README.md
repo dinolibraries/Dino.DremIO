@@ -42,6 +42,53 @@ services.AddDbContext<MyContext>(options =>
 
 The `DremioDbContextOptionsBuilder.UseTokenStore(string path)` method lets you specify where the authentication token is cached.
 
+## DbContext example
+
+You can find a concrete test `DbContext` used in this repository at [Dino.DremIO.Tests/EfCore/DremioTestDbContext.cs](Dino.DremIO.Tests/EfCore/DremioTestDbContext.cs).
+
+Below is a minimal example showing an EF `DbContext` and DI registration using the provider.
+
+```csharp
+// Example entity (read-only view) in tests uses attributes:
+[Keyless]
+[TableContext("youtube-channel-content")]
+[Table("youtube-channel-revenue-combine")]
+public class RevenueCombine { public Guid ProfileId { get; set; } public string Name { get; set; } /* ... */ }
+
+// Minimal DbContext
+public class MyDremioContext : DbContext
+{
+    public MyDremioContext(DbContextOptions<MyDremioContext> options) : base(options) { }
+
+    public DbSet<RevenueCombine> RevenueCombines { get; set; }
+}
+
+// Registering the DbContext in Program.cs / Startup.cs
+services.AddDbContext<MyDremioContext>(options =>
+    options.UseDremio(new DremIOOption
+    {
+        EndpointUrl = "https://dremio.example.com:9047",
+        UserName = "myuser",
+        Password = "mypassword",
+        TokenStore = "C:\\path\\to\\token.cache"
+    }, dremioOpts =>
+    {
+        // Optional: set token store path using the fluent builder
+        dremioOpts.UseTokenStore("C:\\path\\to\\token.cache");
+    })
+);
+
+// Or, if you prefer the simple overload:
+services.AddDbContext<MyDremioContext>(options =>
+    options.UseDremio("https://dremio.example.com:9047", "myuser", "mypassword")
+);
+```
+
+Notes:
+- Entities mapped to Dremio views or datasets in this provider are typically marked with `[Keyless]` because Dremio is often read-only from EF's perspective.
+- Use `[TableContext("<space-or-source>")]` and `[Table("<table-or-view>")]` (see tests) to point the provider at the correct dataset/context.
+- For integration tests, check the `DremioTestDbContext` implementation in the tests folder for a working example.
+
 ## Important classes
 
 - `DremioDbContextOptionsExtensions` (Extensions) — entry points for `UseDremio` and the fluent builder.
