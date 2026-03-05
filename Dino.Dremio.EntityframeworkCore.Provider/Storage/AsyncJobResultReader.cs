@@ -31,5 +31,17 @@ namespace Dino.Dremio.EntityframeworkCore.Provider.Storage
             }
             return false;
         }
+
+        public async ValueTask DisposeAsync()
+        {
+            try
+            {
+                await _enumerator.DisposeAsync();
+            }
+            catch
+            {
+                // Ignore dispose exceptions
+            }
+        }
     }
 }

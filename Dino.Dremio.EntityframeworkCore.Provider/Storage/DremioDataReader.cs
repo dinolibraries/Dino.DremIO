@@ -36,16 +36,46 @@ public sealed class DremioDataReader : DbDataReader
     public override bool Read()
     {
         if (_closed) return false;
-        _rowIndex++;
-        return _rowIndex < _reader.Count;
+
+        // Advance the underlying async reader synchronously so callers using the
+        // synchronous ADO.NET API get the next row populated in `CurrentRow`.
+        var moved = _reader.MoveNextAsync().GetAwaiter().GetResult();
+        if (moved)
+        {
+            _rowIndex++;
+            return true;
+        }
+        return false;
     }
 
-    public override Task<bool> ReadAsync(CancellationToken cancellationToken) =>
-        Task.FromResult(Read());
+    public override async Task<bool> ReadAsync(CancellationToken cancellationToken)
+    {
+        if (_closed) return false;
+
+        var moved = await _reader.MoveNextAsync();
+        if (moved)
+        {
+            _rowIndex++;
+            return true;
+        }
+        return false;
+    }
 
     public override bool NextResult() => false;
 
-    public override void Close() => _closed = true;
+    public override void Close()
+    {
+        _closed = true;
+        // Dispose underlying reader if it supports async dispose.
+        try
+        {
+            _reader.DisposeAsync().GetAwaiter().GetResult();
+        }
+        catch
+        {
+            // Swallow dispose exceptions to avoid breaking callers.
+        }
+    }
 
     public override string GetName(int ordinal) => _reader.Schemas?[ordinal].Name ?? "";
 

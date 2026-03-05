@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Dino.Dremio.EntityframeworkCore.Provider.Storage
 {
-    public interface IJobResultReader
+    public interface IJobResultReader : IAsyncDisposable
     {
          long Count { get; }
          List<Schema>? Schemas { get; }

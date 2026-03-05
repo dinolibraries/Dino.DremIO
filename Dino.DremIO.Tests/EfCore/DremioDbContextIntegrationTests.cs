@@ -251,6 +251,7 @@ public class DremioDbContextIntegrationTests
     public async Task DbContext_Contains()
     {
         using var ctx = new DremioTestDbContext(BuildOptions());
-        var test = await ctx.RevenueCombines.ToListAsync();
+        var test = await ctx.RevenueCombines
+            .Where(x=>x.ChannelId.Contains("hello")).ToListAsync();
     }
 }
