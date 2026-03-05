@@ -14,14 +14,14 @@ namespace Dino.DremIO.Tests.EfCore
     public class RevenueCombine
     {
         public string ChannelId { get; set; }
-        public decimal View { get; set; }
-        public decimal Money { get; set; }
-        public Guid ProfileId { get; set; }
-        public string ProfileName { get; set; }
-        public DateTime Month { get; set; }
-        public DateTime CreatedTime { get; set; }
-        public string Name { get; set; }
-        public string ThumbnailUrl { get; set; }
+        //public decimal View { get; set; }
+        //public decimal Money { get; set; }
+        //public Guid ProfileId { get; set; }
+        //public string ProfileName { get; set; }
+        //public DateTime Month { get; set; }
+        //public DateTime CreatedTime { get; set; }
+        //public string Name { get; set; }
+        //public string ThumbnailUrl { get; set; }
     }
     // ── DbContext dùng cho test ───────────────────────────────────────────────────
     [Keyless]

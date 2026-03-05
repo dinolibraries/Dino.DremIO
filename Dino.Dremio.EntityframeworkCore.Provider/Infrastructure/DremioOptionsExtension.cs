@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Microsoft.EntityFrameworkCore.Update;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Dino.Dremio.EntityframeworkCore.Provider.Infrastructure;
 
@@ -90,6 +91,8 @@ public sealed class DremioOptionsExtension : IDbContextOptionsExtension
             .TryAdd<IConventionSetBuilder, DremioConventionSetBuilder>()
             // ── Register all remaining EF Core relational core services ─────
             .TryAddCoreServices();
+
+        // (No method-call translator plugin required; handled by postprocessor)
     }
 
     public void Validate(IDbContextOptions options) { /* nothing to validate yet */ }

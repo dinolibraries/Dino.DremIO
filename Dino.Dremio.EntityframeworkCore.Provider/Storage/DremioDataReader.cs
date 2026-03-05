@@ -10,39 +10,25 @@ namespace Dino.Dremio.EntityframeworkCore.Provider.Storage;
 /// </summary>
 public sealed class DremioDataReader : DbDataReader
 {
-    private readonly List<Schema> _schema;
-    private readonly List<Dictionary<string, object>> _rows;
     private int _rowIndex = -1;
     private bool _closed;
-
-    public DremioDataReader(JobResultReponse result)
+    private readonly IJobResultReader _reader;
+    public DremioDataReader(IJobResultReader result)
     {
-        _schema = result.Schema ?? new List<Schema>();
-        _rows = result.Rows ?? new List<Dictionary<string, object>>();
-    }
-
-    // ── Current row helpers ─────────────────────────────────────────────────
-
-    private Dictionary<string, object> CurrentRow
-    {
-        get
-        {
-            if (_rowIndex < 0 || _rowIndex >= _rows.Count)
-                throw new InvalidOperationException("No current row.");
-            return _rows[_rowIndex];
-        }
+        _reader = result;
     }
 
     private object RawValue(int ordinal)
     {
-        var name = _schema[ordinal].Name;
-        return CurrentRow.TryGetValue(name, out var v) ? v : DBNull.Value;
+        var name = _reader.Schemas?[ordinal].Name;
+        if (name == null) return DBNull.Value;
+        return (_reader.CurrentRow?.TryGetValue(name, out var v) ?? false) ? v : DBNull.Value;
     }
 
     // ── DbDataReader overrides ──────────────────────────────────────────────
 
-    public override int FieldCount => _schema.Count;
-    public override bool HasRows => _rows.Count > 0;
+    public override int FieldCount => _reader.Schemas?.Count ?? 0;
+    public override bool HasRows => _reader.Count > 0;
     public override bool IsClosed => _closed;
     public override int RecordsAffected => -1;
     public override int Depth => 0;
@@ -51,7 +37,7 @@ public sealed class DremioDataReader : DbDataReader
     {
         if (_closed) return false;
         _rowIndex++;
-        return _rowIndex < _rows.Count;
+        return _rowIndex < _reader.Count;
     }
 
     public override Task<bool> ReadAsync(CancellationToken cancellationToken) =>
@@ -61,15 +47,15 @@ public sealed class DremioDataReader : DbDataReader
 
     public override void Close() => _closed = true;
 
-    public override string GetName(int ordinal) => _schema[ordinal].Name;
+    public override string GetName(int ordinal) => _reader.Schemas?[ordinal].Name ?? "";
 
     public override int GetOrdinal(string name) =>
-        _schema.FindIndex(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase));
+        _reader.Schemas?.FindIndex(s => string.Equals(s.Name, name, StringComparison.OrdinalIgnoreCase)) ?? -1;
 
     public override string GetDataTypeName(int ordinal) =>
-        _schema[ordinal].Type?.Name ?? "VARCHAR";
+        _reader.Schemas?[ordinal].Type?.Name ?? "VARCHAR";
 
-    public override System.Type GetFieldType(int ordinal) => MapType(_schema[ordinal].Type?.Name);
+    public override System.Type GetFieldType(int ordinal) => MapType(_reader.Schemas?[ordinal].Type?.Name);
 
     public override object GetValue(int ordinal)
     {

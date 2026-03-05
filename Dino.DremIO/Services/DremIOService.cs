@@ -135,7 +135,31 @@ namespace Dino.DremIO.Services
         {
             return ResultAsync<Dictionary<string, object>>(jobId, limit, offset, cancellationToken);
         }
-
+        public async IAsyncEnumerable<(List<Schema>, Dictionary<string, object>)> ResultAllAsync(string jobId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            var result = await ResultAsync<Dictionary<string, object>>(jobId, 500, 0, cancellationToken);
+            if (result != null)
+            {
+                var count = 0;
+                do
+                {
+                    count += result.Rows.Count;
+                    foreach (var row in result.Rows)
+                    {
+                        yield return (result.Schema, row);
+                    }
+                    if (count < result.RowCount)
+                    {
+                        result = await ResultAsync<Dictionary<string, object>>(jobId, 500, count, cancellationToken);
+                    }
+                    else
+                    {
+                        result = null;
+                    }
+                }
+                while (result != null);
+            }
+        }
         public async IAsyncEnumerable<TModel> ResultAllAsync<TModel>(string jobId, [EnumeratorCancellation] CancellationToken cancellationToken = default) where TModel : class
         {
             var result = await ResultAsync<TModel>(jobId, 500, 0, cancellationToken);

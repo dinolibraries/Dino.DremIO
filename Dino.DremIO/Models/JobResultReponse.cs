@@ -11,6 +11,11 @@ namespace Dino.DremIO.Models
     public class JobResultReponse: JobResultReponse<Dictionary<string,object>>
     {
     }
+    public class JobResultReponseAsync
+    {
+        public int RowCount { get; set; }
+        public IAsyncEnumerable<(List<Schema>, Dictionary<string, object>)> AsyncRows { get; set; }
+    }
     public class JobResultReponse<TModel>
     {
         [JsonProperty("rowCount")]

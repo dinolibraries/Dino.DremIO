@@ -246,4 +246,11 @@ public class DremioDbContextIntegrationTests
             }) };
         await Task.WhenAll(task);
     }
+
+    [Fact]
+    public async Task DbContext_Contains()
+    {
+        using var ctx = new DremioTestDbContext(BuildOptions());
+        var test = await ctx.RevenueCombines.ToListAsync();
+    }
 }

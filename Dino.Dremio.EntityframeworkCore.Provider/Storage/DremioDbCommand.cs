@@ -95,12 +95,9 @@ public sealed class DremioDbCommand : DbCommand
         if (jobResult.JobState != JobState.COMPLETED)
             throw new InvalidOperationException($"DremIO job ended with state: {jobResult.JobState}. {jobResult.ErrorMessage}");
 
-        var resultData = await job.ResultAsync(jobId, cancellationToken: cancellationToken);
-        var converted = new JobResultReponse
+        var resultData = job.ResultAllAsync(jobId, cancellationToken: cancellationToken);
+        var converted = new AsyncJobResultReader(jobResult?.RowCount ?? 0, resultData)
         {
-            RowCount = resultData?.RowCount ?? 0,
-            Schema   = resultData?.Schema   ?? new(),
-            Rows     = resultData?.Rows     ?? new()
         };
         return new DremioDataReader(converted);
     }
