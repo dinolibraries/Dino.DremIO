@@ -89,6 +89,8 @@ public sealed class DremioOptionsExtension : IDbContextOptionsExtension
             .TryAdd<IExecutionStrategyFactory, DremioExecutionStrategyFactory>()
             // ── Conventions ─────────────────────────────────────────────────
             .TryAdd<IConventionSetBuilder, DremioConventionSetBuilder>()
+            //---
+            .TryAdd<IMethodCallTranslatorProvider, DremioMethodCallTranslatorProvider>()
             // ── Register all remaining EF Core relational core services ─────
             .TryAddCoreServices();
 
