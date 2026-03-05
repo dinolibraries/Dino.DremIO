@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -38,7 +39,20 @@ namespace Dino.DremIO.Services
             var result = await response.Content.ReadAsStringAsync();
             return result == null ? null : JsonConvert.DeserializeObject<TokenResponse>(result);
         }
-        public const string TokenStoreKey = "dremio.token";
+        public static string SanitizeFileName(string fileName)
+        {
+            foreach (var c in Path.GetInvalidFileNameChars())
+            {
+                fileName = fileName.Replace(c, '_');
+            }
+            return fileName;
+        }
+        public static string EncodeBase64(string url)
+        {
+            var plainTextBytes = Encoding.UTF8.GetBytes(url);
+            return Convert.ToBase64String(plainTextBytes);
+        }
+        public string TokenStoreKey { get => "dremio.token-" + SanitizeFileName(_options.UserName) + "-" + EncodeBase64(_options.EndpointUrl); }
         public async Task<string> GetAccessTokenAsync(CancellationToken cancellationToken = default)
         {
             var store = new JsonStorage(_options.TokenStore);
