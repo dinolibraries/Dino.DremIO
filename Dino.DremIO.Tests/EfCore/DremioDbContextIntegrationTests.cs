@@ -252,6 +252,9 @@ public class DremioDbContextIntegrationTests
     {
         using var ctx = new DremioTestDbContext(BuildOptions());
         var test = await ctx.RevenueCombines
-            .Where(x=>x.ChannelId.StartsWith("UCReKpnRR9BjAwiX")).ToListAsync();
+            .Skip(1000)
+            .Take(10000)
+            //.Where(x=>x.ChannelId.StartsWith("UCReKpnRR9BjAwiX"))
+            .ToListAsync();
     }
 }

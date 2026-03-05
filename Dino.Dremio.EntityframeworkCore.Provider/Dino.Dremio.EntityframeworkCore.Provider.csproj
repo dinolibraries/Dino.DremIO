@@ -4,6 +4,8 @@
     <TargetFrameworks>net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<PackageProjectUrl>https://github.com/dinolibraries/Dino.DremIO</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/dinolibraries/Dino.DremIO</RepositoryUrl>
     <RootNamespace>Dino.Dremio.EntityframeworkCore.Provider</RootNamespace>
   </PropertyGroup>
 
