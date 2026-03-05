@@ -15,7 +15,8 @@ namespace Dino.DremIO.Tests.EfCore
     {
         public string ChannelId { get; set; }
         //public decimal View { get; set; }
-        //public decimal Money { get; set; }
+        [Column("EstimatedRevenue")]
+        public decimal Money { get; set; }
         public Guid ProfileId { get; set; }
         public string ProfileName { get; set; }
         //public DateTime Month { get; set; }

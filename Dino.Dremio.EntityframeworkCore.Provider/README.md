@@ -105,3 +105,32 @@ See the integration tests under the `Dino.DremIO.Tests` project and the `EfCore`
 - `DremIOOption` is defined in the main project under `Dino.DremIO/Options`.
 - For real-world testing against a running Dremio instance, provide a valid endpoint and credentials.
 
+## Attributes
+
+The provider relies on a few attributes to map CLR types to Dremio datasets:
+
+- `[Keyless]` — marks an entity without a primary key (common for read-only views).
+- `[TableContext("<space-or-source>")]` — (provider-specific) indicates the Dremio space/context.
+- `[Table("<table-or-view>")]` — indicates the Dremio dataset or view name.
+- `[Column("<columnName>")]` — maps a CLR property to a different column name returned by Dremio. This is the standard `System.ComponentModel.DataAnnotations.Schema.Column` attribute and is useful when the property name in C# differs from the column name in Dremio.
+
+Example from the tests (`DremioTestDbContext`):
+
+```csharp
+[Keyless]
+[TableContext("youtube-channel-content")]
+[Table("youtube-channel-revenue-combine")]
+public class RevenueCombine
+{
+    // Property name differs from Dremio column name
+    [Column("EstimatedRevenue")]
+    public decimal Money { get; set; }
+
+    public Guid ProfileId { get; set; }
+    public string Name { get; set; }
+    public DateTime CreatedTime { get; set; }
+}
+```
+
+Use these attributes on your test or production entities to ensure the provider targets the correct dataset and column names.
+
